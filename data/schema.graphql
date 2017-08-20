@@ -1,0 +1,767 @@
+input ChangePasswordInput {
+  oldPassword: String!
+
+  # user new password
+  password: String!
+  clientMutationId: String
+}
+
+type ChangePasswordPayload {
+  error: String
+  me: User
+  clientMutationId: String
+}
+
+# Represents Contact
+type Contact implements Node {
+  # The ID of an object
+  id: ID!
+
+  # User created this Contact
+  name: String
+
+  # Email this Contact
+  email: String
+
+  # Type of the onwer of this Contact
+  type: String
+
+  # Phone of user
+  phone: String
+  createdAt: String
+  updatedAt: String
+}
+
+input ContactAddInput {
+  name: String
+  email: String
+  type: String!
+  phone: String
+  clientMutationId: String
+}
+
+type ContactAddPayload {
+  contactEdge: ContactEdge
+  viewer: Viewer
+  error: String
+  clientMutationId: String
+}
+
+# A connection to a list of items.
+type ContactConnection {
+  # Information to aid in pagination.
+  pageInfo: PageInfo!
+
+  # A list of edges.
+  edges: [ContactEdge]
+
+  # Total number of count
+  count: Int
+}
+
+# An edge in a connection.
+type ContactEdge {
+  # The item at the end of the edge
+  node: Contact
+
+  # A cursor for use in pagination
+  cursor: String!
+}
+
+input ContactEditInput {
+  id: ID!
+  name: String
+  email: String
+  type: String!
+  phone: String
+  clientMutationId: String
+}
+
+type ContactEditPayload {
+  contact: Contact
+  error: String
+  clientMutationId: String
+}
+
+# Represents Like
+type Like implements Node {
+  # The ID of an object
+  id: ID!
+
+  # User that created this like
+  userId: User
+
+  # Tattoo that owns this like
+  tattoo: Tattoo
+  createdAt: String
+  updatedAt: String
+}
+
+# A connection to a list of items.
+type LikeConnection {
+  # Information to aid in pagination.
+  pageInfo: PageInfo!
+
+  # A list of edges.
+  edges: [LikeEdge]
+}
+
+# An edge in a connection.
+type LikeEdge {
+  # The item at the end of the edge
+  node: Like
+
+  # A cursor for use in pagination
+  cursor: String!
+}
+
+input LoginEmailInput {
+  email: String!
+  password: String!
+  clientMutationId: String
+}
+
+type LoginEmailPayload {
+  me: Me
+  token: String
+  error: String
+  clientMutationId: String
+}
+
+input LoginFacebookInput {
+  accessToken: String!
+  clientMutationId: String
+}
+
+type LoginFacebookPayload {
+  me: Me
+  token: String
+  error: String
+  clientMutationId: String
+}
+
+# Object with data related and only available to the logged user
+type Me implements Node {
+  # The ID of an object
+  id: ID!
+  _id: String
+  name: String
+  email: String
+  image: UserImage
+  phoneNumbers: [String]
+
+  # get information about user settings
+  settings: UserSettings
+
+  # return true if user has no password, logged by a social account
+  hasPassword: Boolean
+
+  # data about social accounts of this user
+  socialAccount: UserSocialAccount
+  user: User
+  notifications(after: String, first: Int, before: String, last: Int): UserNotificationConnection
+}
+
+type Mutation {
+  LoginEmail(input: LoginEmailInput!): LoginEmailPayload
+  RegisterEmail(input: RegisterEmailInput!): RegisterEmailPayload
+  ChangePassword(input: ChangePasswordInput!): ChangePasswordPayload
+  LoginFacebook(input: LoginFacebookInput!): LoginFacebookPayload
+  ContactAdd(input: ContactAddInput!): ContactAddPayload
+  ContactEdit(input: ContactEditInput!): ContactEditPayload
+  TattooAdd(input: TattooAddInput!): TattooAddPayload
+  TattooEdit(input: TattooEditInput!): TattooEditPayload
+  TattooStyleAdd(input: TattooStyleAddInput!): TattooStyleAddPayload
+  TattooStyleEdit(input: TattooStyleEditInput!): TattooStyleEditPayload
+  UserAddressAdd(input: UserAddressAddInput!): UserAddressAddPayload
+  UserAddressEdit(input: UserAddressEditInput!): UserAddressEditPayload
+  SessionAdd(input: SessionAddInput!): SessionAddPayload
+  SessionEdit(input: SessionEditInput!): SessionEditPayload
+}
+
+# An object with an ID
+interface Node {
+  # The id of the object.
+  id: ID!
+}
+
+# Information about pagination in a connection.
+type PageInfo {
+  # When paginating forwards, are there more items?
+  hasNextPage: Boolean!
+
+  # When paginating backwards, are there more items?
+  hasPreviousPage: Boolean!
+
+  # When paginating backwards, the cursor to continue.
+  startCursor: String
+
+  # When paginating forwards, the cursor to continue.
+  endCursor: String
+}
+
+# The root of all... queries
+type Query {
+  # Fetches an object given its ID
+  node(
+    # The ID of an object
+    id: ID!
+  ): Node
+  viewer: Viewer
+}
+
+input RegisterEmailInput {
+  name: String!
+  email: String!
+  password: String!
+  clientMutationId: String
+}
+
+type RegisterEmailPayload {
+  me: Me
+  token: String
+  error: String
+  clientMutationId: String
+}
+
+# Represents SearchQuery
+type SearchQuery implements Node {
+  # The ID of an object
+  id: ID!
+  query: String
+
+  # User that performed this query. When null this was an anonymous query (Web)
+  user: User
+
+  # Context in which this query was peformed.
+  context: String
+
+  # CreateddDate
+  createdAt: String
+  tattoos: TattooConnection
+  users: UserConnection
+}
+
+# Represents Session
+type Session implements Node {
+  # The ID of an object
+  id: ID!
+
+  # User that created this session
+  userId: User
+
+  # Tattoo artist this make session
+  artist: User
+
+  # Tattoo for this session
+  tattoo: Tattoo
+  status: String
+
+  # Date for session
+  date: String
+
+  # Duration for this session
+  duration: String
+
+  # Details for this session
+  details: String
+
+  # Total cost
+  total: Int
+  createdAt: String
+  updatedAt: String
+}
+
+input SessionAddInput {
+  userId: ID!
+  artist: ID!
+  tattoo: ID!
+  status: String
+  date: String
+  duration: String
+  details: String
+  total: Int!
+  clientMutationId: String
+}
+
+type SessionAddPayload {
+  sessionEdge: SessionEdge
+  viewer: Viewer
+  error: String
+  clientMutationId: String
+}
+
+# A connection to a list of items.
+type SessionConnection {
+  # Information to aid in pagination.
+  pageInfo: PageInfo!
+
+  # A list of edges.
+  edges: [SessionEdge]
+}
+
+# An edge in a connection.
+type SessionEdge {
+  # The item at the end of the edge
+  node: Session
+
+  # A cursor for use in pagination
+  cursor: String!
+}
+
+input SessionEditInput {
+  id: ID!
+  userId: ID!
+  artist: ID!
+  tattoo: ID!
+  status: String
+  date: String
+  duration: String
+  details: String
+  total: Int!
+  clientMutationId: String
+}
+
+type SessionEditPayload {
+  session: Session
+  error: String
+  clientMutationId: String
+}
+
+# Represents Tattoo
+type Tattoo implements Node {
+  # The ID of an object
+  id: ID!
+
+  # Tattoo name
+  name: String
+
+  # Tattoo price
+  price: Int
+
+  # ID user and image path
+  image: String
+
+  # Tattoo size
+  size: Int
+
+  # Tattoo session duration
+  duration: String
+
+  # Tattoo styles duration
+  styles: String
+
+  # Author that created this tattoo
+  author: ID
+
+  # String array generated with attributes names. Used for Full text search
+  body: String
+
+  # Disables this tattoo on the Web and App. It will not show in search
+  avaible: Boolean
+  createdAt: String
+  updatedAt: String
+}
+
+input TattooAddInput {
+  name: String
+  price: Int!
+  image: String!
+  size: Int
+  duration: String
+  styles: String
+  author: ID
+  body: String
+  avaible: Boolean
+  clientMutationId: String
+}
+
+type TattooAddPayload {
+  tattooEdge: TattooEdge
+  viewer: Viewer
+  error: String
+  clientMutationId: String
+}
+
+# A connection to a list of items.
+type TattooConnection {
+  # Information to aid in pagination.
+  pageInfo: PageInfo!
+
+  # A list of edges.
+  edges: [TattooEdge]
+
+  # Total number of count
+  count: Int
+}
+
+# An edge in a connection.
+type TattooEdge {
+  # The item at the end of the edge
+  node: Tattoo
+
+  # A cursor for use in pagination
+  cursor: String!
+}
+
+input TattooEditInput {
+  id: ID!
+  name: String
+  price: Int!
+  image: String!
+  size: Int
+  duration: String
+  styles: String
+  author: ID
+  body: String
+  avaible: Boolean
+  clientMutationId: String
+}
+
+type TattooEditPayload {
+  tattoo: Tattoo
+  error: String
+  clientMutationId: String
+}
+
+# Represents TattooStyle
+type TattooStyle implements Node {
+  # The ID of an object
+  id: ID!
+
+  # Style name
+  name: String
+  createdAt: String
+  updatedAt: String
+}
+
+input TattooStyleAddInput {
+  name: String
+  clientMutationId: String
+}
+
+type TattooStyleAddPayload {
+  tattooStyleEdge: TattooStyleEdge
+  viewer: Viewer
+  error: String
+  clientMutationId: String
+}
+
+# A connection to a list of items.
+type TattooStyleConnection {
+  # Information to aid in pagination.
+  pageInfo: PageInfo!
+
+  # A list of edges.
+  edges: [TattooStyleEdge]
+}
+
+# An edge in a connection.
+type TattooStyleEdge {
+  # The item at the end of the edge
+  node: TattooStyle
+
+  # A cursor for use in pagination
+  cursor: String!
+}
+
+input TattooStyleEditInput {
+  id: ID!
+  name: String
+  clientMutationId: String
+}
+
+type TattooStyleEditPayload {
+  tattooStyle: TattooStyle
+  error: String
+  clientMutationId: String
+}
+
+# User data
+type User implements Node {
+  # The ID of an object
+  id: ID!
+  _id: String
+  name: String
+  email: String
+  active: Boolean
+}
+
+# Represents UserAddress
+type UserAddress implements Node {
+  # The ID of an object
+  id: ID!
+  userId: User
+  zipcode: String
+  street: String
+
+  # The address number
+  number: String
+  neighborhood: String
+  city: String
+  state: String
+  complement: String
+  deleted: Boolean
+  createdAt: String
+  updatedAt: String
+}
+
+input UserAddressAddInput {
+  userId: ID!
+  zipcode: String
+  street: String!
+  number: String!
+  neighborhood: String
+  city: String
+  state: String
+  complement: String
+  deleted: Boolean
+  clientMutationId: String
+}
+
+type UserAddressAddPayload {
+  userAddressEdge: UserAddressEdge
+  viewer: Viewer
+  error: String
+  clientMutationId: String
+}
+
+# A connection to a list of items.
+type UserAddressConnection {
+  # Information to aid in pagination.
+  pageInfo: PageInfo!
+
+  # A list of edges.
+  edges: [UserAddressEdge]
+}
+
+# An edge in a connection.
+type UserAddressEdge {
+  # The item at the end of the edge
+  node: UserAddress
+
+  # A cursor for use in pagination
+  cursor: String!
+}
+
+input UserAddressEditInput {
+  id: ID!
+  userId: ID!
+  zipcode: String
+  street: String!
+  number: String!
+  neighborhood: String
+  city: String
+  state: String
+  complement: String
+  deleted: Boolean
+  clientMutationId: String
+}
+
+type UserAddressEditPayload {
+  userAddress: UserAddress
+  error: String
+  clientMutationId: String
+}
+
+# A connection to a list of items.
+type UserConnection {
+  # Information to aid in pagination.
+  pageInfo: PageInfo!
+
+  # A list of edges.
+  edges: [UserEdge]
+  count: Int
+}
+
+# An edge in a connection.
+type UserEdge {
+  # The item at the end of the edge
+  node: User
+
+  # A cursor for use in pagination
+  cursor: String!
+}
+
+# Represents UserImage
+type UserImage implements Node {
+  # The ID of an object
+  id: ID!
+
+  # User that this Image belongs to
+  user: User
+
+  # Type of this Image
+  type: String
+
+  # Source of this image
+  source: String
+
+  # Original source path of this image. Optional
+  sourcePath: String
+
+  # Sets if this image is deleted or not. True means that image should not be shown to users
+  deleted: Boolean
+
+  # Priority of this image related to other images from the same owner
+  priority: Int
+
+  # Path of this image in the storage media
+  path: String
+
+  # Image Exif information
+  exif: String
+
+  # Image name used during upload
+  originalName: String
+  createdAt: String
+  updatedAt: String
+}
+
+# A connection to a list of items.
+type UserImageConnection {
+  # Information to aid in pagination.
+  pageInfo: PageInfo!
+
+  # A list of edges.
+  edges: [UserImageEdge]
+}
+
+# An edge in a connection.
+type UserImageEdge {
+  # The item at the end of the edge
+  node: UserImage
+
+  # A cursor for use in pagination
+  cursor: String!
+}
+
+# Represents UserNotification
+type UserNotification implements Node {
+  # The ID of an object
+  id: ID!
+
+  # User that will receive this push
+  user: User
+
+  # The title of the notification
+  title: String
+
+  # The body of the notification
+  body: String
+
+  # Deeplinking
+  url: String
+
+  # event name for firebase analytics
+  firebaseAnalytics: String
+
+  # when this notification was sent
+  sentAt: String
+
+  # when this notification was opened
+  openedAt: String
+  createdAt: String
+  updatedAt: String
+}
+
+# A connection to a list of items.
+type UserNotificationConnection {
+  # Information to aid in pagination.
+  pageInfo: PageInfo!
+
+  # A list of edges.
+  edges: [UserNotificationEdge]
+}
+
+# An edge in a connection.
+type UserNotificationEdge {
+  # The item at the end of the edge
+  node: UserNotification
+
+  # A cursor for use in pagination
+  cursor: String!
+}
+
+# it holds all user settings
+type UserSettings implements Node {
+  # The ID of an object
+  id: ID!
+  push: UserSettingsPush
+  geolocation: String
+}
+
+# it holds all user settings related to push notifications
+type UserSettingsPush implements Node {
+  # The ID of an object
+  id: ID!
+
+  # Enables or disables all push notifications
+  enabled: Boolean
+}
+
+# Represents UserSocialAccount
+type UserSocialAccount implements Node {
+  # The ID of an object
+  id: ID!
+  user: User
+  active: Boolean
+  provider: String
+
+  # User ID in the provider
+  uid: String
+
+  # User ID in the provider ecosystem
+  providerUserId: String
+  gender: String
+  email: String
+  accessToken: String
+
+  # Date that the access token expires
+  accessTokenExpires: String
+  username: String
+  name: String
+  nameFirst: String
+  nameLast: String
+  verified: Boolean
+  locale: String
+  profileURL: String
+  profileImage: String
+  timezone: String
+
+  # Payload with data received from the Provider in unscructured format
+  rawData: String
+  createdAt: String
+  updatedAt: String
+
+  # return true if the user has facebook account linked
+  facebook: Boolean
+}
+
+# ...
+type Viewer implements Node {
+  # The ID of an object
+  id: ID!
+  me: Me
+  user(id: ID!): User
+  users(after: String, first: Int, before: String, last: Int, search: String): UserConnection
+  userImage(id: ID!): UserImage
+  userImages(after: String, first: Int, before: String, last: Int, search: String): UserImageConnection
+  userAddress(id: ID!): UserAddress
+  userAddresses(after: String, first: Int, before: String, last: Int, search: String): UserAddressConnection
+  addressByCep(cep: String!): UserAddress
+  contact(id: ID!): Contact
+  contacts(after: String, first: Int, before: String, last: Int, search: String): ContactConnection
+  contactsSearch(after: String, first: Int, before: String, last: Int, search: String): ContactConnection
+  tattoo(id: ID!): Tattoo
+  tattoos(after: String, first: Int, before: String, last: Int, search: String): TattooConnection
+  tattoostyle(id: ID!): TattooStyle
+  tattoostyles(after: String, first: Int, before: String, last: Int, search: String): TattooStyleConnection
+  myTattoos(after: String, first: Int, before: String, last: Int, search: String): TattooConnection
+  countTattoos: TattooConnection
+  session(id: ID!): Session
+  sessions(after: String, first: Int, before: String, last: Int, search: String): SessionConnection
+  like(id: ID!): Like
+  likes(after: String, first: Int, before: String, last: Int, search: String): LikeConnection
+  search(text: String): SearchQuery
+}
